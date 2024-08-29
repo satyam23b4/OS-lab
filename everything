@@ -1,0 +1,272 @@
+~$ mkdir Desktop
+~$ cd Desktop
+~/Desktop$ mkdir newDir
+~/Desktop$ cd newDir
+~/Desktop/newDir$ cd ..
+~/Desktop$ cat > file1.txt
+I am file 1
+~/Desktop$ cat > file2.txt
+I am file2
+~/Desktop$ cd newDir
+~/Desktop/newDir$ cat > file3.txt
+I am file 3 and i am inside newDir
+~/Desktop/newDir$ cd ..
+~/Desktop$ find newDir -type f -name "*.txt"
+newDir/file3.txt
+~/Desktop$ cd newDir
+~/Desktop/newDir$ cat > example.txt
+Hi am example  
+~/Desktop/newDir$ cd ..
+~/Desktop$ find newDir -type f -name "*.txt"
+newDir/file3.txt
+newDir/example.txt
+~/Desktop$ find newDir -type f -name "*.txt" -regex '.*/[^aeiouAEIOU][^/]*[0-9][^/]*\.txt' -mindepth 1
+find: warning: you have specified the global option -mindepth after the argument -type, but global options are not positional, i.e., -mindepth affects tests specified before it as well as those specified after it.  Please specify global options before other arguments.
+newDir/file3.txt
+~/Desktop$ find newDir -type f -name "*.txt" -regex '.*/[^aeiouAEIOU][^/]*[0-9][^/]*\.txt'
+newDir/file3.txt
+~/Desktop$ find newDir -type f -name "*.txt" -regex ".*/[^AEIOUaeiou][^/]*[0-9][^/]*\.txt"
+newDir/file3.txt
+~/Desktop$ find -type f -name "*.txt" -regex  ".*/[^AEIOUaeiou][^/]*[0-9][^/]*\.txt"
+./file2.txt
+./newDir/file3.txt
+./file1.txt
+~/Desktop$ find newDir  -type f -name "*.txt" -regex  ".*/[^AEIOUaeiou][^/]*[0-9][^/]*\.txt"
+newDir/file3.txt
+~/Desktop$ find newDir  -type f -name "*.txt" -regex  ".*/[0-9][^/]*\.txt"
+~/Desktop$ find newDir  -type f -name "*.txt" -regex  ".*/[0-9][^/]*\"
+> ^C
+~/Desktop$ find newDir  -type f -name "*.txt" -regex  ".*/[0-9][^/]*\.txt"
+~/Desktop$ find newDir -type f -name "*.txt" -regex  ".*/[0-9][^/]*\.txt"
+~/Desktop$ cd newDir
+~/Desktop/newDir$ ls
+example.txt  file3.txt
+~/Desktop/newDir$ cat > "3file.txt"
+I am a dummy file
+~/Desktop/newDir$ cd ..
+~/Desktop$ find newDir -type f -name "*.txt" -regex  ".*/[0-9][^/]*\.txt"
+newDir/3file.txt
+~/Desktop$ grep -x '.\{2\}'
+file1.txt
+^C
+~/Desktop$ grep -x '.\{2\}' file1.txt
+~/Desktop$ cat > newFile.txt
+hi
+~/Desktop$ grep -x '.\{2\}' newFile.txt
+hi
+~/Desktop$ ls
+file1.txt  file2.txt  newDir  newFile.txt
+~/Desktop$ grep -x '.\{2\}' file.txt
+grep: file.txt: No such file or directory
+~/Desktop$ grep -x '.\{2\}' file1.txt
+~/Desktop$ grep -x '.\{2\}' newFile.txt
+hi
+~/Desktop$ cat >> capFile.txt
+Hi I am Cap
+~/Desktop$ 
+~/Desktop$ grep ^[A-Z] CapFile.txt
+grep: CapFile.txt: No such file or directory
+~/Desktop$ grep ^[A-Z] capFile.txt
+Hi I am Cap
+~/Desktop$ cat >> file4.txt
+Hi I am file4.
+~/Desktop$ grep [.]^ file4.txt
+~/Desktop$ grep '\.$' file4.txt
+Hi I am file4.
+~/Desktop$ grep ' ' file1.txt
+I am file 1
+~/Desktop$ cat > numFile.txt
+1 2 3 4 5 6778  
+~/Desktop$ touch numFile2 | grep [0-9] numFile > numFile2
+grep: numFile: No such file or directory
+~/Desktop$ touch numFile2.txt | grep [0-9] numFile.txt > numFile2.txt
+~/Desktop$ cat numFile2.txt
+1 2 3 4 5 6778
+~/Desktop$ cat > clgfile.txt
+MIT
+~/Desktop$ grep -lR 'MIT'
+clgfile.txt
+~/Desktop$ grep -r 'MIT' | sed 's/MIT/Manipal Institute of Technology/g'
+clgfile.txt:Manipal Institute of Technology
+~/Desktop$ cat clgfile.txt
+MIT
+~/Desktop$ cat numFile.txt
+1 2 3 4 5 6778
+~/Desktop$ find -type f '[0-9]' -exec wc
+find: paths must precede expression: `[0-9]'
+~/Desktop$ find -type f -name '*[0-9]*' -exec wc
+find: missing argument to `-exec'
+~/Desktop$ find -type f -name '*[0-9]*' -exec wc {}
+find: missing argument to `-exec'
+~/Desktop$ find -type f -name '*[0-9]*' -exec wc {} +
+  1   3  11 ./file2.txt
+  1   9  35 ./newDir/file3.txt
+  1   5  18 ./newDir/3file.txt
+  1   4  15 ./file4.txt
+  1   6  15 ./numFile2.txt
+  0   0   0 ./numFile2
+  1   4  12 ./file1.txt
+  6  31 106 total
+~/Desktop$ find -type f -name '*[0-9]*' wc
+find: paths must precede expression: `wc'
+~/Desktop$ find -type f -name '*[0-9]*' -exec wc {} +
+  1   3  11 ./file2.txt
+  1   9  35 ./newDir/file3.txt
+  1   5  18 ./newDir/3file.txt
+  1   4  15 ./file4.txt
+  1   6  15 ./numFile2.txt
+  0   0   0 ./numFile2
+  1   4  12 ./file1.txt
+  6  31 106 total
+~/Desktop$ wc file1.txt & wc file2.txt & wc fle4.txt
+[1] 2245
+[2] 2246
+wc: fle4.txt 1  4 12 file1.txt
+: No such file or directory
+ 1  3 11 file2.txt
+[1]-  Done                    wc file1.txt
+[2]+  Done                    wc file2.txt
+~/Desktop$ wc file1.txt & wc file2.txt & wc file4.txt
+[1] 2257
+[2] 2258
+ 1  3 11 file2.txt
+ 1  4 12 file1.txt
+ 1  4 15 file4.txt
+[1]-  Done                    wc file1.txt
+[2]+  Done                    wc file2.txt
+~/Desktop$ jobs
+~/Desktop$ pkill wc
+~/Desktop$ ps aux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+user           1  0.0  0.0   2780   840 ?        Ss   05:06   0:00 /cocalc/bin/tini -v 
+user           6  0.0  0.0   2892   844 ?        SN   05:06   0:00 sh -c env -i /cocalc
+user           7  0.9  0.2 941496 92020 ?        RNl  05:06   0:55 node --trace-warning
+user         215  0.0  0.0  15440  8340 ?        SNs  05:06   0:00 sshd: /usr/sbin/sshd
+user         662  0.0  0.0   8192  7160 pts/0    SNs  05:17   0:00 /bin/bash
+user        2270  0.0  0.0   7484  3224 pts/0    RN+  06:41   0:00 ps aux
+~/Desktop$ ps aux | awk '{print $2}'
+PID
+1
+6
+7
+215
+662
+2289
+2290
+~/Desktop$ nano
+~/Desktop$ bash check.sh
+check.sh: line 1: =: command not found
+check.sh: line 2: [: missing `]'
+check.sh: line 4: [: missing `]'
+'' is not a regular file nor a directory
+~/Desktop$ nano check.sh
+~/Desktop$ nano check.sh
+~/Desktop$ bash check.sh
+check.sh: line 1: =: command not found
+'' is a directory
+~/Desktop$ nano check.sh
+~/Desktop$ bash check.sh
+check.sh: line 1: =file1.txt: command not found
+'' is not a regular file nor a directory
+~/Desktop$ nano check.sh
+~/Desktop$ bash check.sh
+'file1.txt' is a file
+~/Desktop$ nano check1.sh
+~/Desktop$ bash check1.sh
+Enter the directory to search in:
+Desktop
+check1.sh: line 12: unexpected EOF while looking for matching `"'
+check1.sh: line 13: syntax error: unexpected end of file
+~/Desktop$ nano check1.sh
+~/Desktop$ bash check11.sh
+bash: check11.sh: No such file or directory
+~/Desktop$ bash check1.sh
+Enter the directory to search in:
+Desktop
+The directory 'Desktop' does not exist
+~/Desktop$ ls
+capFile.txt  check1.sh    file1.txt  file4.txt  newFile.txt  numFile2
+check.sh     clgfile.txt  file2.txt  newDir     numFile.txt  numFile2.txt
+~/Desktop$ cd newDir
+~/Desktop/newDir$ ls
+3file.txt  example.txt  file3.txt
+~/Desktop/newDir$ cat file3.txt
+I am file 3 and i am inside newDir
+~/Desktop/newDir$ cd ..
+~/Desktop$ bash check1.sh
+Enter the directory to search in:
+newDir
+Enter the pattern to search for
+file
+Files in 'newDir' containig the patter 'file':
+file3.txt
+3file.txt
+~/Desktop$ nano check3.sh
+~/Desktop$ bash check3.sh
+Renamed: ./numFile.txt to ./numFile.text
+Renamed: ./file2.txt to ./file2.text
+Renamed: ./newDir/file3.txt to ./newDir/file3.text
+Renamed: ./newDir/example.txt to ./newDir/example.text
+Renamed: ./newDir/3file.txt to ./newDir/3file.text
+Renamed: ./file4.txt to ./file4.text
+Renamed: ./numFile2.txt to ./numFile2.text
+Renamed: ./clgfile.txt to ./clgfile.text
+Renamed: ./newFile.txt to ./newFile.text
+Renamed: ./capFile.txt to ./capFile.text
+Renamed: ./file1.txt to ./file1.text
+~/Desktop$ ls
+capFile.text  check3.sh     file2.text  newFile.text  numFile2.text
+check.sh      clgfile.text  file4.text  numFile.text
+check1.sh     file1.text    newDir      numFile2
+~/Desktop$ nano salary.sh
+~/Desktop$ bash salary.sh
+Enter the basic salary:
+300
+Enter the TA
+45
+salary.sh: line 5: ten_percent: command not found
+(standard_in) 2: syntax error
+GPL Ghostscript 9.55.0 (2021-09-27)
+Copyright (C) 2021 Artifex Software, Inc.  All rights reserved.
+This software is supplied under the GNU AGPLv3 and comes with NO WARRANTY:
+see the file COPYING for details.
+GPL Ghostscript 9.55.0: Cannot open X display `(null)'.
+**** Unable to open the initial device, quitting.
+gross salary is: 
+~/Desktop$ nano salary.sh
+~/Desktop$ nano salary.sh
+~/Desktop$ bash salary.sh
+Enter the basic salary:
+300
+Enter the TA
+45
+gross salary is: 375.00
+~/Desktop$ nano switch.sh
+~/Desktop$ bash switch.sh
+Select an option:
+1. Create a new file
+2. Display file contents
+3. Rename a file
+4. Delete a file
+5. Exit
+Enter your choice [1-5]: 1
+Enter the filename to create: bhaiya.txt
+File 'bhaiya.txt' created.
+
+Select an option:
+1. Create a new file
+2. Display file contents
+3. Rename a file
+4. Delete a file
+5. Exit
+Enter your choice [1-5]: 2
+Enter the filename to display: bhaiya.txt
+Contents of 'bhaiya.txt':
+
+Select an option:
+1. Create a new file
+2. Display file contents
+3. Rename a file
+4. Delete a file
+5. Exit
+Enter your choice [1-5]:   
